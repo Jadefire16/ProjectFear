@@ -81,11 +81,10 @@ namespace ProjectFear.Cameras
         private void ProcessCameraCollisions(float deltaTime)
         {
             targetDepth = defaultDepth;
-            RaycastHit hit;
             Vector3 normalizedDirection = camTransform.position - camPivot.position; // get normalized direction
             normalizedDirection.Normalize();
 
-            if (Physics.SphereCast(camPivot.position, collisionRadius, normalizedDirection, out hit, Mathf.Abs(targetDepth), ignoreMask)) // detect collisions
+            if (Physics.SphereCast(camPivot.position, collisionRadius, normalizedDirection, out RaycastHit hit, Mathf.Abs(targetDepth), ignoreMask)) // detect collisions
             {
                 float dist = Vector3.Distance(camPivot.position, hit.point);
                 targetDepth = -(dist - collisionOffset);

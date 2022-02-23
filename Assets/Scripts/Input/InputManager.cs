@@ -12,6 +12,10 @@ namespace ProjectFear.Input
         private float moveAmount = 0;
         private float mouseX = 0;
         private float mouseY = 0;
+        private bool rollInput;
+        private bool rollFlag;
+        private bool isInteracting;
+
         private Vector2 movementInput;
         private Vector2 cameraInput;
 
@@ -35,8 +39,15 @@ namespace ProjectFear.Input
         public float MoveAmount { get => moveAmount; }
         public float MouseX { get => mouseX; }
         public float MouseY { get => mouseY; }
+        public bool RollInput { get => rollInput; set => rollInput = value; }
+        public bool RollFlag { get => rollFlag; set => rollFlag = value; }
+        public bool IsInteracting { get => isInteracting; set => isInteracting = value; }
 
-        public void Tick(float deltaTime) => MoveInput(deltaTime);
+        public void Tick(float deltaTime)
+        {
+            MoveInput(deltaTime);
+            HandleRollInput(deltaTime);
+        }
 
         private void Start()
         {
@@ -76,6 +87,15 @@ namespace ProjectFear.Input
             moveAmount = Mathf.Clamp01(Mathf.Abs(horziontal) + Mathf.Abs(vertical));
             mouseX = cameraInput.x;
             mouseY = cameraInput.y;
+        }
+
+        private void HandleRollInput(float deltaTime)
+        {
+            rollInput = inputActions.PlayerActions.Roll.phase == UnityEngine.InputSystem.InputActionPhase.Performed; // player desires roll, so let em rolllllll
+            // If I haven't mentioned it already Unity's new input system is trash
+
+            if (rollInput)
+                rollFlag = true;
         }
 
     }

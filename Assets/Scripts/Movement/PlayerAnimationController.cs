@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using ProjectFear.Input;
+using ProjectFear.Movement;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,15 +10,23 @@ namespace ProjectFear.Animation
     public class PlayerAnimationController : MonoBehaviour
     {
         [SerializeField] private Animator anim;
+        [SerializeField] private InputManager input;
+        [SerializeField] private PlayerMovementController movementController;
         [SerializeField] private float dampTime = 0.1f;
         [SerializeField] private bool canRotate = false;
         private int verticalHash = 0, horizontalHash = 0;
 
         public bool CanRotate { get => canRotate; }
+        public Animator Anim { get => anim; }
 
         public void Init()
         {
-            anim = GetComponent<Animator>();
+            if(anim == null)
+                anim = GetComponent<Animator>();
+            if (input == null)
+                input = GetComponentInParent<InputManager>();
+            if (movementController == null)
+                movementController = GetComponentInParent<PlayerMovementController>();
             verticalHash = Animator.StringToHash("Vertical");
             horizontalHash = Animator.StringToHash("Horizontal");
         }
@@ -48,6 +58,25 @@ namespace ProjectFear.Animation
                 h = 0;
             anim.SetFloat(verticalHash, v, dampTime, Time.deltaTime);
             anim.SetFloat(horizontalHash, h, dampTime, Time.deltaTime);
+        }
+        public void PlayAnimation(string animation, bool isInteracting)
+        {
+            anim.applyRootMotion = isInteracting;
+            anim.SetBool("IsInteracting", isInteracting);
+            anim.CrossFade(animation, 0.2f);
+        }
+
+        private void OnAnimatorMove()
+        {
+            if (!input.IsInteracting)
+                return;
+
+            float deltaTime = Time.deltaTime;
+            movementController.SetDrag(0f);
+            Vector3 deltaPos = anim.deltaPosition;
+            deltaPos.y = 0;
+            Vector3 velocity = deltaPos / deltaTime;
+            movementController.SetVelocity(velocity);
         }
 
         public void AllowRotation() => canRotate = true;

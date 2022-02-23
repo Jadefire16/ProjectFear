@@ -45,12 +45,18 @@ namespace ProjectFear.Movement
 
         private void Update()
         {
-            float delta = Time.deltaTime;
+            float deltaTime = Time.deltaTime;
+            input.Tick(deltaTime);
 
-            input.Tick(delta);
+            HandleMovement(deltaTime);
+            HandleRoll(deltaTime);
+        }
 
-            moveDirection = cam.forward * input.Vertical;
-            moveDirection += cam.right * input.Horziontal;
+        public void SetDrag(float value) => rb.drag = value;
+        public void SetVelocity(Vector3 velocity) => rb.velocity = velocity;
+        public void HandleMovement(float deltaTime)
+        {
+            SetBaseMoveDirection();
             moveDirection.Normalize();
             moveDirection.y = 0;
 
@@ -63,12 +69,31 @@ namespace ProjectFear.Movement
             animController.UpdateAnimatorValues(input.MoveAmount, 0);
 
             if (animController.CanRotate)
-                HandleRotation(delta);
+                HandleRotation(deltaTime);
+        }
+
+        public void HandleRoll(float deltaTime)
+        {
+            if (animController.Anim.GetBool("IsInteracting")) // this is very bad, dont rely on the animator for this stuff
+                return;
+            if (input.RollFlag)
+            {
+                SetBaseMoveDirection();
+
+                if (input.MoveAmount > 0)
+                {
+                    animController.PlayAnimation("standing_roll", true); // TODO this was alll very bad, just do the role and then add velocity in the desired direction
+                    moveDirection.y = 0;
+                    Quaternion rollRotation = Quaternion.LookRotation(moveDirection);
+                    transform.rotation = rollRotation;
+                } // TODO place else here and play kick anim instead possibly?
+            }
+
         }
 
         private void HandleRotation(float deltaTime)
         {
-            Vector3 targetDir = Vector3.zero;
+            Vector3 targetDir;
             float moveOverride = input.MoveAmount;
 
             targetDir = cam.forward * input.Vertical;
@@ -87,9 +112,13 @@ namespace ProjectFear.Movement
 
             transform.rotation = smoothedTargetRotation;
         }
+        
 
-
-
+        private void SetBaseMoveDirection()
+        {
+            moveDirection = cam.forward * input.Vertical;
+            moveDirection += cam.right * input.Horziontal;
+        }
 
         private void AssertCheck()
         {
@@ -98,5 +127,6 @@ namespace ProjectFear.Movement
             Debug.Assert(animController != null);
 
         }
+
     }
 }
