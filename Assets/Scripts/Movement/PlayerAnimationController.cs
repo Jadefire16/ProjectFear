@@ -61,22 +61,8 @@ namespace ProjectFear.Animation
         }
         public void PlayAnimation(string animation, bool isInteracting)
         {
-            anim.applyRootMotion = isInteracting;
             anim.SetBool("IsInteracting", isInteracting);
             anim.CrossFade(animation, 0.2f);
-        }
-
-        private void OnAnimatorMove()
-        {
-            if (!input.IsInteracting)
-                return;
-
-            float deltaTime = Time.deltaTime;
-            movementController.SetDrag(0f);
-            Vector3 deltaPos = anim.deltaPosition;
-            deltaPos.y = 0;
-            Vector3 velocity = deltaPos / deltaTime;
-            movementController.SetVelocity(velocity);
         }
 
         public void AllowRotation() => canRotate = true;
