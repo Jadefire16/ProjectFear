@@ -56,8 +56,6 @@ namespace JadesToolkit
             sceneDatas = new Dictionary<int, SceneData>(approximateScenes);
             scenePairs = new Dictionary<string, int>(approximateScenes);
             InitializeScenes();
-            if (Cursor.lockState == CursorLockMode.None)
-                Cursor.lockState = CursorLockMode.Locked;
         }
 
         public void LoadSceneAsync(string key, LoadSceneMode mode = LoadSceneMode.Single)
