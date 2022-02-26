@@ -12,6 +12,8 @@ public class TentacleFlower : MonoBehaviour, IDamageable // you can definitely m
     [SerializeField] private GameObject spitBullet;
     [SerializeField] private float spitAttackRange = 5f;
     [SerializeField] private float spitAttackDamage = 1f;
+    [SerializeField] private float speed = 2f;
+
 
     [Header("Close Attack")]
     [SerializeField] private float whipAttackRadius = 3f;
@@ -30,10 +32,10 @@ public class TentacleFlower : MonoBehaviour, IDamageable // you can definitely m
     }
 
     [ContextMenu("Shoot")]
-    private void SpitAttack()
+    public void SpitAttack()
     {
         Bullet bullet = Instantiate(spitBullet, transform.forward, Quaternion.identity).GetComponent<Bullet>();
-        bullet.Initialize(transform.position, transform.forward, hitMask, spitAttackDamage, 2f, spitAttackRange);
+        bullet.Initialize(transform.position, transform.forward, hitMask, spitAttackDamage, speed, spitAttackRange);
     }
 
     private void WhipAttack()
