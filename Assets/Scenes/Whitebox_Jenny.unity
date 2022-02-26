@@ -1040,6 +1040,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 290476405}
+  input: {fileID: 0}
+  movementController: {fileID: 0}
   dampTime: 0.1
   canRotate: 1
 --- !u!95 &290476405
@@ -2149,7 +2151,7 @@ PrefabInstance:
     - target: {fileID: 1117153196508275764, guid: b6f6349f7e03f0a4db2c3b5ff8b58e33,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 24.749992
+      value: 24.5
       objectReference: {fileID: 0}
     - target: {fileID: 1117153196508275764, guid: b6f6349f7e03f0a4db2c3b5ff8b58e33,
         type: 3}
@@ -3840,7 +3842,7 @@ PrefabInstance:
     - target: {fileID: 1117153196508275764, guid: b6f6349f7e03f0a4db2c3b5ff8b58e33,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 33.75
+      value: 33.5
       objectReference: {fileID: 0}
     - target: {fileID: 1117153196508275764, guid: b6f6349f7e03f0a4db2c3b5ff8b58e33,
         type: 3}
