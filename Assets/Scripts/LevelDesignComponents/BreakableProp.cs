@@ -16,6 +16,7 @@ public class BreakableProp : BreakableObject
 
     private void Start()
     {
+        currentHealth = initialHealth;
         col = GetComponent<Collider>();
         rend = GetComponent<MeshRenderer>();
     }

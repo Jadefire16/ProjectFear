@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class BreakableObject : MonoBehaviour, IDamageable
 {
-    [SerializeField] protected float initialHealth;
+    [SerializeField] protected float initialHealth = 2;
 
     protected float currentHealth;
 
