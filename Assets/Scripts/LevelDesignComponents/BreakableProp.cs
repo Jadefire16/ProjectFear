@@ -29,6 +29,7 @@ public class BreakableProp : BreakableObject
         active = false;
         onBreak?.Invoke();
         StartCoroutine(DestroyDelay());
+        Debug.Log("Destroyed");
     }
 
     public override void TakeDamage(float value)

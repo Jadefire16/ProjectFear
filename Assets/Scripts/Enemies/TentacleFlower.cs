@@ -6,9 +6,16 @@ public class TentacleFlower : MonoBehaviour, IDamageable // you can definitely m
 {
 
     [SerializeField] private float initialHealth = 5;
+    [SerializeField] private LayerMask hitMask;
 
-    [SerializeField] private float spitAttackRange = 6;
-    [SerializeField] private float whipAttackRadius = 3;
+    [Header("Ranged Attack")]
+    [SerializeField] private GameObject spitBullet;
+    [SerializeField] private float spitAttackRange = 5f;
+    [SerializeField] private float spitAttackDamage = 1f;
+
+    [Header("Close Attack")]
+    [SerializeField] private float whipAttackRadius = 3f;
+    [SerializeField] private float whipDamage = 1f;
 
     private float currentHealth;
 
@@ -17,10 +24,16 @@ public class TentacleFlower : MonoBehaviour, IDamageable // you can definitely m
         currentHealth = initialHealth;
     }
 
+    private void Update()
+    {
+        
+    }
 
+    [ContextMenu("Shoot")]
     private void SpitAttack()
     {
-
+        Bullet bullet = Instantiate(spitBullet, transform.forward, Quaternion.identity).GetComponent<Bullet>();
+        bullet.Initialize(transform.position, transform.forward, hitMask, spitAttackDamage, 2f, spitAttackRange);
     }
 
     private void WhipAttack()
@@ -53,3 +66,8 @@ public class TentacleFlower : MonoBehaviour, IDamageable // you can definitely m
         Destroy(gameObject);
     }
 }
+//if (!Physics.SphereCast(transform.position, 0.25f, transform.forward, out RaycastHit info, spitAttackRange, hitMask, QueryTriggerInteraction.Ignore))
+//    return;
+//info.collider.TryGetComponent<IDamageable>(out IDamageable damageable);
+//if (damageable == null)
+//    return;
