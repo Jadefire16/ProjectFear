@@ -8,7 +8,7 @@ using UnityEngine.Events;
 public class BreakableProp : BreakableObject
 {
     [SerializeField] private float destroyObjectDelay = 1f;
-    [SerializeField] private UnityEvent<Vector3> onBreak;
+    [SerializeField] private UnityEvent onBreak;
 
     private bool active = true;
     private Collider col;
@@ -21,12 +21,13 @@ public class BreakableProp : BreakableObject
         rend = GetComponent<MeshRenderer>();
     }
 
+    [ContextMenu("Break Object")]
     public override void BreakObject()
     {
         col.enabled = false;
         rend.enabled = false;
         active = false;
-        onBreak?.Invoke(transform.position);
+        onBreak?.Invoke();
         StartCoroutine(DestroyDelay());
     }
 

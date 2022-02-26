@@ -31,4 +31,7 @@ public class ObjectSpawner : MonoBehaviour
         var obj = Instantiate(prefab, position, rotation);
         instantiatedPrefabs.Add(obj);
     }
+
+    public void SpawnPrefab() => SpawnPrefab(transform.position, transform.rotation);
+
 }
