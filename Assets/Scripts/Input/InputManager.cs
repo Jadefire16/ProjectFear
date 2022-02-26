@@ -13,11 +13,17 @@ namespace ProjectFear.Input
         private float mouseX = 0;
         private float mouseY = 0;
         private bool rollInput;
-        private bool rollFlag;
         private bool isInteracting;
 
         private Vector2 movementInput;
         private Vector2 cameraInput;
+
+        private static readonly Dictionary<ActionFlagType, bool> actionFlags = new Dictionary<ActionFlagType, bool>
+        {
+            {ActionFlagType.Roll, false },
+            {ActionFlagType.LightAttack, false },
+            {ActionFlagType.HeavyAttack, false }
+        };
 
         private CameraController camController;
         private StandardControls inputActions = null;
@@ -40,13 +46,19 @@ namespace ProjectFear.Input
         public float MouseX { get => mouseX; }
         public float MouseY { get => mouseY; }
         public bool RollInput { get => rollInput; set => rollInput = value; }
-        public bool RollFlag { get => rollFlag; set => rollFlag = value; }
         public bool IsInteracting { get => isInteracting; set => isInteracting = value; }
 
         public void Tick(float deltaTime)
         {
             MoveInput(deltaTime);
-            HandleRollInput(deltaTime);
+            HandleFlags(deltaTime);
+        }
+
+        public bool GetActionFlagValue(ActionFlagType type)
+        {
+            if (!actionFlags.ContainsKey(type))
+                throw new System.Exception("Invalid Action Type");
+            return actionFlags[type];
         }
 
         private void Start()
@@ -65,6 +77,11 @@ namespace ProjectFear.Input
                 camController.FollowTarget(fixedDeltaTime);
                 camController.ProcessCameraRotation(mouseX, mouseY, fixedDeltaTime);
             }
+        }
+
+        private void LateUpdate()
+        {
+            SetActionFlag(ActionFlagType.Roll, false);
         }
 
         private void OnEnable()
@@ -89,13 +106,18 @@ namespace ProjectFear.Input
             mouseY = cameraInput.y;
         }
 
-        private void HandleRollInput(float deltaTime)
+        private void HandleFlags(float deltaTime)
         {
-            rollInput = inputActions.PlayerActions.Roll.phase == UnityEngine.InputSystem.InputActionPhase.Performed; // player desires roll, so let em rolllllll
-            // If I haven't mentioned it already Unity's new input system is trash
+            rollInput = inputActions.PlayerActions.Roll.phase == UnityEngine.InputSystem.InputActionPhase.Performed;
+            if (rollInput) // if we're rolling keep on rolling
+                SetActionFlag(ActionFlagType.Roll, true);
+        }
 
-            if (rollInput)
-                rollFlag = true;
+        private void SetActionFlag(ActionFlagType flagType, bool value)
+        {
+            if (!actionFlags.ContainsKey(flagType))
+                return;
+            actionFlags[flagType] = value;
         }
 
     }

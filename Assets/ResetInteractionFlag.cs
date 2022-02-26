@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ResetInteractionFlag : StateMachineBehaviour
 {
-
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.SetBool("IsInteracting", false);

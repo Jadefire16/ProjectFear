@@ -23,7 +23,6 @@ namespace ProjectFear.Movement
         [SerializeField] private float rotationSpeed = 7.5f;
 
         private Vector3 normalVector;
-        private Vector3 targetPos;
 
 
         private void Awake()
@@ -33,9 +32,6 @@ namespace ProjectFear.Movement
             animController = GetComponentInChildren<PlayerAnimationController>(); // TODO write a helper function to just Get component in current and children
             if (cam == null)
                 cam = Camera.main.transform;
-#if UNITY_EDITOR
-            AssertCheck();
-#endif
         }
 
         private void Start()
@@ -49,7 +45,7 @@ namespace ProjectFear.Movement
             input.Tick(deltaTime);
 
             HandleMovement(deltaTime);
-            HandleRoll(deltaTime);
+            HandleRoll();
         }
 
         public void SetDrag(float value) => rb.drag = value;
@@ -72,23 +68,15 @@ namespace ProjectFear.Movement
                 HandleRotation(deltaTime);
         }
 
-        public void HandleRoll(float deltaTime)
+        public void HandleRoll()
         {
             if (animController.Anim.GetBool("IsInteracting")) // this is very bad, dont rely on the animator for this stuff
                 return;
-            if (input.RollFlag)
+            if (input.GetActionFlagValue(ActionFlagType.Roll))
             {
-                SetBaseMoveDirection();
-
                 if (input.MoveAmount > 0)
-                {
-                    animController.PlayAnimation("standing_roll", true); // TODO this was alll very bad, just do the role and then add velocity in the desired direction
-                    moveDirection.y = 0;
-                    Quaternion rollRotation = Quaternion.LookRotation(moveDirection);
-                    transform.rotation = rollRotation;
-                } // TODO place else here and play kick anim instead possibly?
+                    animController.PlayAnimation("standing_roll", true); //TODO port this out of movement controller
             }
-
         }
 
         private void HandleRotation(float deltaTime)
@@ -112,20 +100,11 @@ namespace ProjectFear.Movement
 
             transform.rotation = smoothedTargetRotation;
         }
-        
 
         private void SetBaseMoveDirection()
         {
             moveDirection = cam.forward * input.Vertical;
             moveDirection += cam.right * input.Horziontal;
-        }
-
-        private void AssertCheck()
-        {
-            Debug.Assert(rb != null);
-            Debug.Assert(input != null);
-            Debug.Assert(animController != null);
-
         }
 
     }
