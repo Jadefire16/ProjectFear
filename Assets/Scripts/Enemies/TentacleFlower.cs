@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TentacleFlower : MonoBehaviour, IDamageable // you can definitely move this to a state machine later and recycle this for the controller
 {
@@ -18,6 +19,9 @@ public class TentacleFlower : MonoBehaviour, IDamageable // you can definitely m
     [Header("Close Attack")]
     [SerializeField] private float whipAttackRadius = 3f;
     [SerializeField] private float whipDamage = 1f;
+
+    [Header("On Death")]
+    [SerializeField] private UnityEvent OnDeath;
 
     private float currentHealth;
 
@@ -65,6 +69,7 @@ public class TentacleFlower : MonoBehaviour, IDamageable // you can definitely m
 
     private void KillPlant()
     {
+        OnDeath?.Invoke();
         Destroy(gameObject);
     }
 }
